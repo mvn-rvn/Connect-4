@@ -25,9 +25,10 @@ def checkforwin():
 
 #main loop
 while who_won == None:
-    #place pieces
+    #get input
     printgrid()
     action = int(input(turn + "'s turn. "))
+    #place piece
     bottom = False
     row = 0
     while bottom == False:
