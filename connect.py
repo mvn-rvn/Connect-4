@@ -1,3 +1,5 @@
+import time
+
 # initialize the 2d array
 grid = []
 while len(grid) != 6:
@@ -14,6 +16,7 @@ def printgrid():
         for elem in row:
             print(elem + " ", end="")
         print(" ")
+    print("----------------------------------------------")
 
 #main loop
 while who_won == None:
@@ -23,11 +26,12 @@ while who_won == None:
     bottom = False
     row = 0
     while bottom == False:
-        if grid[0][action] == "-" and (row + 1 == 6 or grid[row + 1][action] != "-"):
+        if grid[0][action] == "-" and (row + 1 == len(grid) or grid[row + 1][action] != "-"):
             grid[row][action] = turn
             bottom = True
-        if grid[0][action] != "-":
+        elif grid[0][action] != "-":
             print("Bruh that column's full")
+            time.sleep(1)
             bottom = True
         row += 1
     
