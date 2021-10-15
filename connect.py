@@ -18,6 +18,11 @@ def printgrid():
         print(" ")
     print("----------------------------------------------")
 
+def checkforwin():
+    for row in grid:
+        for elem in row:
+            pass
+
 #main loop
 while who_won == None:
     #place pieces
@@ -34,7 +39,6 @@ while who_won == None:
             time.sleep(1)
             bottom = True
         row += 1
-    
     #advance turn order
     if turn == "X":
         turn = "O"
