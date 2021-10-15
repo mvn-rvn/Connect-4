@@ -8,14 +8,31 @@ turn = "X"
 who_won = None
 
 # REMINDER: grid[y][x]. y coordinate goes from top to bottom
-def printgrid(who_won):
-    print("\n1 2 3 4 5 6 7")
+def printgrid():
+    print("\n0 1 2 3 4 5 6")
     for row in grid:
         for elem in row:
             print(elem + " ", end="")
         print(" ")
-    if who_won != None:
-        print(turn + "'s turn")
 
+#main loop
 while who_won == None:
-    pass
+    #place pieces
+    printgrid()
+    action = int(input(turn + "'s turn. "))
+    bottom = False
+    row = 0
+    while bottom == False:
+        if grid[0][action] == "-" and (row + 1 == 6 or grid[row + 1][action] != "-"):
+            grid[row][action] = turn
+            bottom = True
+        if grid[0][action] != "-":
+            print("Bruh that column's full")
+            bottom = True
+        row += 1
+    
+    #advance turn order
+    if turn == "X":
+        turn = "O"
+    else:
+        turn = "X"
