@@ -5,13 +5,17 @@ while len(grid) != 6:
 
 # initialize turn order
 turn = "X"
+who_won = None
 
 # REMINDER: grid[y][x]. y coordinate goes from top to bottom
-def printgrid():
+def printgrid(who_won):
     print("\n1 2 3 4 5 6 7")
     for row in grid:
         for elem in row:
             print(elem + " ", end="")
         print(" ")
-    print(turn + "'s turn")
+    if who_won != None:
+        print(turn + "'s turn")
 
+while who_won == None:
+    pass
