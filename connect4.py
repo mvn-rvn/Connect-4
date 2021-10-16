@@ -1,4 +1,3 @@
-import asyncio
 global data
 data = None
 
@@ -112,9 +111,8 @@ async def on_message(msg):
     print("I got a message!")
     if msg.content.isdigit():
         global data
+        print(int(msg.content))
         data = int(msg.content)
     await bot.process_commands(msg)
-
-
 
 bot.run(open("token.txt", "r").read())
