@@ -1,10 +1,3 @@
-#initialize the 2d array
-grid = []
-while len(grid) != 7:
-    grid.append(["-", "-", "-", "-", "-", "-", "-"])
-
-#initialize turn order
-
 #REMINDER: grid[y][x]. y coordinate goes from top to bottom
 def printgrid():
     print("\n0 1 2 3 4 5 6")
@@ -47,6 +40,11 @@ def checkforwin():
 
 #main loop
 def gameloop():
+    #initialize 2d list and turn order
+    global grid
+    grid = []
+    while len(grid) != 7:
+        grid.append(["-", "-", "-", "-", "-", "-", "-"])
     turn = "X"
     while True:
         #get input
@@ -73,5 +71,3 @@ def gameloop():
             turn = "O"
         else:
             turn = "X"
-
-gameloop()
