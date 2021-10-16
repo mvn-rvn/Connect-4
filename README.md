@@ -1,2 +1,2 @@
-# Connect-4
+# Discord-Connect-4
  
