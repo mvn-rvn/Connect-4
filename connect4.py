@@ -72,9 +72,9 @@ async def gameloop():
             await bot.change_presence(status=nextcord.Status.online, activity=nextcord.Game(name="c4 commands"))
             data = None
             break
-        action = data + 1
+        action = data - 1
         bottom = False
-        if action > 7 or action < 1:
+        if action > 6 or action < 0:
             await discord_channel.send("bruh that's not a space you can drop tokens in")
             bottom = True
         #place piece
