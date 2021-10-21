@@ -1,4 +1,7 @@
+import os
 global data
+global is_playing
+is_playing = False
 data = None
 
 #REMINDER: grid[y][x]. y coordinate goes from top to bottom
@@ -49,24 +52,32 @@ def check(m):
 
 #main loop
 async def gameloop():
+    await bot.change_presence(status=nextcord.Status.dnd, activity=nextcord.Game(name="c4 commands"))
     #initialize 2d list and turn order
     global grid
     global data
     grid = []
-    while len(grid) != 7:
+    while len(grid) != 6:
         grid.append(["-", "-", "-", "-", "-", "-", "-"])
     turn = "X"
     while True:
         #get input
         await discord_channel.send(printgrid())
         await discord_channel.send(turn + "'s turn. ")
-        await bot.wait_for("message", check=check)
-        action = data
-        if action > 6:
-            discord_channel.send("bruh that's not a space you can drop tokens in")
+        #await bot.wait_for("message", check=check)
+        while data == None:
+            await asyncio.sleep(0.5)
+            pass
+        if data == "forfeit":
+            await bot.change_presence(status=nextcord.Status.online, activity=nextcord.Game(name="c4 commands"))
+            data = None
             break
-        #place piece
+        action = data
         bottom = False
+        if action > 6:
+            await discord_channel.send("bruh that's not a space you can drop tokens in")
+            bottom = True
+        #place piece
         row = 0
         while bottom == False:
             if grid[0][action] == "-" and (row + 1 == len(grid) or grid[row + 1][action] != "-"):
@@ -80,6 +91,10 @@ async def gameloop():
         if checkforwin() == True:
             await discord_channel.send(printgrid())
             await discord_channel.send("WINNER: " + turn)
+            global is_playing
+            is_playing = False
+            data = None
+            await bot.change_presence(status=nextcord.Status.online, activity=nextcord.Game(name="c4 commands"))
             break
         #advance turn order
         if turn == "X":
@@ -90,21 +105,44 @@ async def gameloop():
 
 #-----------------------------------------------------------------
 
+import nextcord
 from nextcord.ext import commands
 import asyncio
 
-bot = commands.Bot(command_prefix="c4!")
+bot = commands.Bot(command_prefix="c4 ")
 global discord_channel
 
 @bot.event
 async def on_ready():
     print("Connected.")
+    await bot.change_presence(status=nextcord.Status.online, activity=nextcord.Game(name="c4 commands"))
 
 @bot.command()
-async def normal(ctx):
-    global discord_channel
-    discord_channel = ctx.channel
-    await gameloop()
+async def play(ctx):
+    global is_playing
+    if is_playing == False:
+        is_playing = True
+        global discord_channel
+        discord_channel = ctx.channel
+        await gameloop()
+    else:
+        await ctx.channel.send("There's an existing game going on, finish that one first")
+
+@bot.command()
+async def forfeit(ctx):
+    global is_playing
+    if is_playing == True:
+        global data
+        await ctx.channel.send("Gotcha.")
+        is_playing = False
+        data = "forfeit"
+    else:
+        await ctx.channel.send("There isn't a game going on.")
+
+@bot.command()
+async def commands(ctx):
+    await ctx.channel.send("**\"c4 play\"**\nSets up a game of Connect 4.\n\n**\"c4 forfeit\"**\nPrematurely ends an ongoing game of Connect 4.\n\n**How to play**\nType in the number corresponding to a column on your turn.\n\n*Note: This bot does not keep track of who is playing in the game, meaning anyone can type in a number and the bot will continue the game regardless. Do not abuse this oversight.*")
+
 
 @bot.event
 async def on_message(msg):
@@ -115,4 +153,4 @@ async def on_message(msg):
         data = int(msg.content)
     await bot.process_commands(msg)
 
-bot.run(open("token.txt", "r").read())
+bot.run(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "token.txt"), "r").read())
