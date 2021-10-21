@@ -7,10 +7,10 @@ data = None
 #REMINDER: grid[y][x]. y coordinate goes from top to bottom
 def printgrid():
     output = "```"
-    output += "\n0 1 2 3 4 5 6\n"
+    output += "\n1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣\n"
     for row in grid:
         for elem in row:
-            output += elem + " "
+            output += elem
         output += "\n"
     output += "```"
     return output
@@ -21,28 +21,28 @@ def checkforwin():
     for y in range(len(grid) - 3):
         for x in range(len(grid[0])):
             piece = grid[y][x]
-            if piece != "-":
+            if piece != "\N{MEDIUM BLACK CIRCLE}":
                 if grid[y][x] == piece and grid[y+1][x] == piece and grid[y+2][x] == piece and grid[y+3][x] == piece:
                     return True
         #horizontal wins
     for y in range(len(grid)):
         for x in range(len(grid[0]) - 3):
             piece = grid[y][x]
-            if piece != "-":
+            if piece != "\N{MEDIUM BLACK CIRCLE}":
                 if grid[y][x] == piece and grid[y][x+1] == piece and grid[y][x+2] == piece and grid[y][x+3] == piece:
                     return True
     #diagonal down wins
     for y in range(len(grid) - 3):
         for x in range(len(grid[0]) - 3):
             piece = grid[y][x]
-            if piece != "-":
+            if piece != "\N{MEDIUM BLACK CIRCLE}":
                 if grid[y][x] == piece and grid[y+1][x+1] == piece and grid[y+2][x+2] == piece and grid[y+3][x+3] == piece:
                     return True
     #diagonal up wins
     for y in range(len(grid) - 4, len(grid)):
         for x in range(len(grid[0]) - 3):
             piece = grid[y][x]
-            if piece != "-":
+            if piece != "\N{MEDIUM BLACK CIRCLE}":
                 if grid[y][x] == piece and grid[y-1][x+1] == piece and grid[y-2][x+2] == piece and grid[y-3][x+3] == piece:
                     return True
 
@@ -58,8 +58,8 @@ async def gameloop():
     global data
     grid = []
     while len(grid) != 6:
-        grid.append(["-", "-", "-", "-", "-", "-", "-"])
-    turn = "X"
+        grid.append(["\N{MEDIUM BLACK CIRCLE}", "\N{MEDIUM BLACK CIRCLE}", "\N{MEDIUM BLACK CIRCLE}", "\N{MEDIUM BLACK CIRCLE}", "\N{MEDIUM BLACK CIRCLE}", "\N{MEDIUM BLACK CIRCLE}", "\N{MEDIUM BLACK CIRCLE}"])
+    turn = "\N{LARGE RED CIRCLE}"
     while True:
         #get input
         await discord_channel.send(printgrid())
@@ -72,18 +72,18 @@ async def gameloop():
             await bot.change_presence(status=nextcord.Status.online, activity=nextcord.Game(name="c4 commands"))
             data = None
             break
-        action = data
+        action = data + 1
         bottom = False
-        if action > 6:
+        if action > 7 or action < 1:
             await discord_channel.send("bruh that's not a space you can drop tokens in")
             bottom = True
         #place piece
         row = 0
         while bottom == False:
-            if grid[0][action] == "-" and (row + 1 == len(grid) or grid[row + 1][action] != "-"):
+            if grid[0][action] == "\N{MEDIUM BLACK CIRCLE}" and (row + 1 == len(grid) or grid[row + 1][action] != "\N{MEDIUM BLACK CIRCLE}"):
                 grid[row][action] = turn
                 bottom = True
-            elif grid[0][action] != "-":
+            elif grid[0][action] != "\N{MEDIUM BLACK CIRCLE}":
                 await discord_channel.send("bruh the column's full")
                 bottom = True
             row += 1
@@ -97,10 +97,10 @@ async def gameloop():
             await bot.change_presence(status=nextcord.Status.online, activity=nextcord.Game(name="c4 commands"))
             break
         #advance turn order
-        if turn == "X":
-            turn = "O"
+        if turn == "\N{LARGE RED CIRCLE}":
+            turn = "\N{LARGE BLUE CIRCLE}"
         else:
-            turn = "X"
+            turn = "\N{LARGE RED CIRCLE}"
         data = None
 
 #-----------------------------------------------------------------
