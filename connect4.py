@@ -98,7 +98,7 @@ async def gameloop():
             break
         #advance turn order
         if turn == "\N{LARGE RED CIRCLE}":
-            turn = "\N{LARGE YELLOW CIRCLE}"
+            turn = "\N{LARGE BLUE CIRCLE}"
         else:
             turn = "\N{LARGE RED CIRCLE}"
         data = None
