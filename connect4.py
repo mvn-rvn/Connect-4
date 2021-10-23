@@ -85,11 +85,11 @@ async def gameloop(width, height):
             if grid[0][action] == "\N{MEDIUM BLACK CIRCLE}" and (row + 1 == len(grid) or grid[row + 1][action] != "\N{MEDIUM BLACK CIRCLE}"):
                 grid[row][action] = turn
                 bottom = True
+                pprint.pp(grid)
             elif grid[0][action] != "\N{MEDIUM BLACK CIRCLE}":
                 await discord_channel.send("bruh the column's full")
                 bottom = True
             row += 1
-            pprint.pp(grid)
         #check for winners
         if checkforwin() == True:
             await discord_channel.send(printgrid(len(grid[0])))
