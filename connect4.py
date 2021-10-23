@@ -1,13 +1,15 @@
 import os
+import pprint
 global data
 global is_playing
 is_playing = False
 data = None
 
 #REMINDER: grid[y][x]. y coordinate goes from top to bottom
-def printgrid():
+def printgrid(width):
     output = "```"
-    output += "\n1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣\n"
+    characters = "1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣9️⃣🔟"
+    output += "\n" + characters[0:(width * len("1️⃣"))] + "\n"
     for row in grid:
         for elem in row:
             output += elem
@@ -51,18 +53,18 @@ def check(m):
     return m.content.isdigit()
 
 #main loop
-async def gameloop():
-    await bot.change_presence(status=nextcord.Status.dnd, activity=nextcord.Game(name="c4 commands"))
+async def gameloop(width, height):
+    await bot.change_presence(status=nextcord.Status.dnd, activity=nextcord.Game(name="c4 cmds"))
     #initialize 2d list and turn order
     global grid
     global data
     grid = []
-    while len(grid) != 6:
-        grid.append(["\N{MEDIUM BLACK CIRCLE}", "\N{MEDIUM BLACK CIRCLE}", "\N{MEDIUM BLACK CIRCLE}", "\N{MEDIUM BLACK CIRCLE}", "\N{MEDIUM BLACK CIRCLE}", "\N{MEDIUM BLACK CIRCLE}", "\N{MEDIUM BLACK CIRCLE}"])
+    while len(grid) != height:
+        grid.append(["\N{MEDIUM BLACK CIRCLE}"] * width)
     turn = "\N{LARGE RED CIRCLE}"
     while True:
         #get input
-        await discord_channel.send(printgrid())
+        await discord_channel.send(printgrid(len(grid[0])))
         await discord_channel.send(turn + "'s turn. ")
         #await bot.wait_for("message", check=check)
         while data == None:
@@ -74,7 +76,7 @@ async def gameloop():
             break
         action = data - 1
         bottom = False
-        if action > 6 or action < 0:
+        if action > width - 1 or action < 0:
             await discord_channel.send("bruh that's not a space you can drop tokens in")
             bottom = True
         #place piece
@@ -87,14 +89,15 @@ async def gameloop():
                 await discord_channel.send("bruh the column's full")
                 bottom = True
             row += 1
+            pprint.pp(grid)
         #check for winners
         if checkforwin() == True:
-            await discord_channel.send(printgrid())
+            await discord_channel.send(printgrid(len(grid[0])))
             await discord_channel.send("WINNER: " + turn)
             global is_playing
             is_playing = False
             data = None
-            await bot.change_presence(status=nextcord.Status.online, activity=nextcord.Game(name="c4 commands"))
+            await bot.change_presence(status=nextcord.Status.online, activity=nextcord.Game(name="c4 cmds"))
             break
         #advance turn order
         if turn == "\N{LARGE RED CIRCLE}":
@@ -115,18 +118,18 @@ global discord_channel
 @bot.event
 async def on_ready():
     print("Connected.")
-    await bot.change_presence(status=nextcord.Status.online, activity=nextcord.Game(name="c4 commands"))
+    await bot.change_presence(status=nextcord.Status.online, activity=nextcord.Game(name="c4 cmds"))
 
 @bot.command()
-async def play(ctx):
+async def play(ctx, width=7, height=6):
     global is_playing
-    if is_playing == False:
+    if is_playing == False and width <= 10 and width >= 7 and height >= 6 and height <= 15:
         is_playing = True
         global discord_channel
         discord_channel = ctx.channel
-        await gameloop()
+        await gameloop(width, height)
     else:
-        await ctx.channel.send("There's an existing game going on, finish that one first")
+        await ctx.channel.send("Your game could not be created, possibly due to one of the following reasons:\n-There is already an ongoing game.\n-You made the board smaller than its minimum (7x6).\n-You made the board bigger than its maximum (10x15).")
 
 @bot.command()
 async def forfeit(ctx):
@@ -140,8 +143,8 @@ async def forfeit(ctx):
         await ctx.channel.send("There isn't a game going on.")
 
 @bot.command()
-async def commands(ctx):
-    await ctx.channel.send("**\"c4 play\"**\nSets up a game of Connect 4.\n\n**\"c4 forfeit\"**\nPrematurely ends an ongoing game of Connect 4.\n\n**How to play**\nType in the number corresponding to a column on your turn.\n\n*Note: This bot does not keep track of who is playing in the game, meaning anyone can type in a number and the bot will continue the game regardless. Do not abuse this oversight.*")
+async def cmds(ctx):
+    await ctx.channel.send("**\"c4 play [width] [height]\"**\nSets up a game of Connect 4. Width and height are optional.\n-The default and minimum is 7x6.\n-The maximum is 10x15.\n\n**\"c4 forfeit\"**\nPrematurely ends an ongoing game of Connect 4.\n\n**How to play**\nType in the number corresponding to a column on your turn.\n\n*Note: This bot does not keep track of who is playing in the game, meaning anyone can type in a number and the bot will continue the game regardless. Do not abuse this oversight.*")
 
 
 @bot.event

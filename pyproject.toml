@@ -7,6 +7,7 @@ authors = ["Zenith5720 <<>>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 nextcord = "^2.0.0-alpha.3"
+pprint36 = "^3.9.0"
 
 [tool.poetry.dev-dependencies]
 

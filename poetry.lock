@@ -80,6 +80,14 @@ speed = ["orjson (>=3.5.4)", "aiodns (>=1.1)", "brotli", "cchardet"]
 voice = ["PyNaCl (>=1.3.0,<1.5)"]
 
 [[package]]
+name = "pprint36"
+version = "3.9.0.2"
+description = "Backport of pprint from Python 3.9 to Python 3.6-3.8"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
 name = "typing-extensions"
 version = "3.10.0.2"
 description = "Backported and Experimental Type Hints for Python 3.5+"
@@ -102,7 +110,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "fcd7f5f200bda3d5e19bcd8250f5916d66eb9938a4ea4d8a49dbd75fa9a0f1c8"
+content-hash = "974b3e117840beaf595342168152eb73857f50639c780f5a2a452b96aef4ee92"
 
 [metadata.files]
 aiohttp = [
@@ -236,6 +244,10 @@ multidict = [
 ]
 nextcord = [
     {file = "nextcord-2.0.0a3.tar.gz", hash = "sha256:f45933be7052db13d29ef30061ef75af3d413dfcb0d1f7c3757fe7f8478002f1"},
+]
+pprint36 = [
+    {file = "pprint36-3.9.0.2-py3-none-any.whl", hash = "sha256:b2be43c73cfca167827117bc8ac156cbff488760e756fd275dbe6ee4a9bfeafd"},
+    {file = "pprint36-3.9.0.2.tar.gz", hash = "sha256:13cc9d059a6fd250b84c579ea3b8fa86d239d61b6cdf3946f66c265d34c834ca"},
 ]
 typing-extensions = [
     {file = "typing_extensions-3.10.0.2-py2-none-any.whl", hash = "sha256:d8226d10bc02a29bcc81df19a26e56a9647f8b0a6d4a83924139f4a8b01f17b7"},
